@@ -1,13 +1,26 @@
+import { moneyItem, moneyStore } from '../common/data'
 import charts from '../views/chart/charts'
 import home from '../views/index/home'
 import mine from '../views/mine/mine'
+
 
 @Entry
 @Component
 struct Index {
 
-  @State num:number=0
+  onPageShow(): void {
+    AppStorage.setOrCreate<moneyItem[]>("arr",[])
+    PersistentStorage.persistProp<moneyStore[]>("store",[])
+    AppStorage.setOrCreate<boolean>("flag",false)
+    AppStorage.setOrCreate<boolean>("changeArr",false)
+    let context=getContext()
+    let path=context.tempDir
+    console.log('tmp'+path)
+    console.log('files'+context.filesDir)
+    console.log('cache'+context.cacheDir)
+  }
 
+  @State num:number=0
   @Builder
   tarBarBuilder(name:string,index:number){
 
