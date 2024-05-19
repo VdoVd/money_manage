@@ -11,8 +11,8 @@ export default struct home{
   @State money:number=0
   @StorageLink("arr") arr:moneyItem[]=[]
   @StorageLink("store") store:moneyStore[]=[]
-  @StorageLink("flag") @Watch("change") flag:boolean=false
-  @StorageLink("changeArr") @Watch("getStore") findStore:boolean=false
+  @StorageLink("flag") @Watch("changeStore") flag:boolean=false
+  @Provide @Watch("getStore") findStore:boolean=true
   @State outcome:number=0
   @State income:number=0
 
@@ -20,24 +20,24 @@ export default struct home{
     builder:timeDialog({year:this.year,mouth:this.mouth})
   })
 
-
-
   aboutToAppear(): void {
     let d=new Date()
     this.year=d.getFullYear().toString()
     this.mouth=(d.getMonth()+1).toString()
-    // this.getStore()
-    this.change()
+    this.getStore()
+    // this.change()
     console.log(`store:${JSON.stringify(this.store)}`)
   }
 
-  private addStore(){
+  private changeStore(){
     let obj:moneyStore = {year:this.year,mouth:this.mouth,moneyItem:this.arr}
     console.log(`add store:${JSON.stringify(obj)}`)
     if(this.store.length===0){
       this.store.push(obj)
       this.store=[...this.store]
       console.log(`add store length 0:${JSON.stringify(this.store)}`)
+      this.change()
+      return
     }
     this.store.forEach(item=>{
       if(obj.year!=item.year||obj.mouth!=item.mouth){
@@ -50,19 +50,45 @@ export default struct home{
         console.log(`add store obj:${JSON.stringify(this.store)}`)
       }
     })
-
+    this.change()
+    return
   }
 
-  private getStore() {
+  @State timeId:number=0
 
-    this.store.forEach(item => {
-      if (item.year === this.year&&this.mouth===this.mouth) {
-        this.arr = [...item.moneyItem]
+  private getStore() {
+    clearInterval(this.timeId)
+    this.timeId=setInterval(()=>{
+      if(this.findStore===true){
+        if(this.store.length===0) {
+          this.arr = [...[]]
+          this.change()
+          return
+        }
+        let f=false
+        this.store.forEach(item => {
+          if ((item.mouth===this.mouth&&item.year===this.year)) {
+            this.arr = [...item.moneyItem]
+            console.log(`year:${item.year}&&mouth:${item.mouth}`)
+            console.log(`year:${this.year}&&mouth:${this.mouth}`)
+            f=true
+          }
+        })
+        if(f===false){
+          console.log('false')
+          this.arr=[...[]]
+          this.change()
+          return
+        }
+        this.change()
+        this.findStore=false
+        console.log(`store:${JSON.stringify(this.store===undefined?'none':this.store)}`)
+        console.log('get store')
       }
-    })
-    this.findStore=false
-    console.log(`store:${JSON.stringify(this.store===undefined?'none':this.store)}`)
-    console.log('get store')
+    },1000)
+
+
+
   }
 
   change(){
@@ -137,7 +163,6 @@ export default struct home{
             }.height('100%')
             .justifyContent(FlexAlign.Start)
           }.layoutWeight(1)
-          .zIndex(3)
 
 
         }else{

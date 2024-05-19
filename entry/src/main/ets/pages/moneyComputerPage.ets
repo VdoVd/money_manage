@@ -55,6 +55,7 @@ struct count {
           }
           console.log(`item:${JSON.stringify(item)}`)
           this.arr.push(item)
+          this.arr=[...this.arr]
           this.flag=true
         })
       SelectMoneyView({ arr: arr })

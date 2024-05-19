@@ -9,10 +9,9 @@ import mine from '../views/mine/mine'
 struct Index {
 
   onPageShow(): void {
-    AppStorage.setOrCreate<moneyItem[]>("arr",[])
+    PersistentStorage.persistProp<moneyItem[]>("arr",[])
     PersistentStorage.persistProp<moneyStore[]>("store",[])
     AppStorage.setOrCreate<boolean>("flag",false)
-    AppStorage.setOrCreate<boolean>("changeArr",false)
     let context=getContext()
     let path=context.tempDir
     console.log('tmp'+path)

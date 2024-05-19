@@ -10,7 +10,7 @@ export default struct timeDialog{
   @State data:timeClass={} as timeClass
   @Link mouth:string
   @Link year:string
-  @StorageLink("changeArr") flag:boolean=false
+  @Consume findStore:boolean
 
   aboutToAppear(): void {
     this.data=data()
@@ -42,7 +42,7 @@ export default struct timeDialog{
         Button('确定')
           .onClick(()=>{
             this.controller.close()
-            this.flag=true
+            this.findStore=true
           })
       }.width('100%').justifyContent(FlexAlign.SpaceBetween)
     }
