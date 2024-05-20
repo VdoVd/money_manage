@@ -11,8 +11,9 @@ export default struct home{
   @State money:number=0
   @StorageLink("arr") arr:moneyItem[]=[]
   @StorageLink("store") store:moneyStore[]=[]
+  @State @Watch("change") isItemsNeedChange:boolean=false
   @StorageLink("flag") @Watch("changeStore") flag:boolean=false
-  @Provide @Watch("getStore") findStore:boolean=true
+  @Provide @Watch("getStore") findStore:boolean=false
   @State outcome:number=0
   @State income:number=0
   @State deleteFlag:boolean=false
@@ -25,70 +26,82 @@ export default struct home{
     let d=new Date()
     this.year=d.getFullYear().toString()
     this.mouth=(d.getMonth()+1).toString()
-    this.getStore()
-    // this.change()
+    this.findStore=true
     console.log(`store:${JSON.stringify(this.store)}`)
   }
 
   private changeStore(){
-    let obj:moneyStore = {year:this.year,mouth:this.mouth,moneyItem:this.arr}
-    console.log(`add store:${JSON.stringify(obj)}`)
-    if(this.store.length===0){
-      this.store.push(obj)
-      this.store=[...this.store]
-      console.log(`add store length 0:${JSON.stringify(this.store)}`)
-      this.change()
-      return
-    }
-    this.store.forEach(item=>{
-      if(obj.year!=item.year||obj.mouth!=item.mouth){
+    if(this.flag){
+      let obj:moneyStore = {year:this.year,mouth:this.mouth,moneyItem:this.arr}
+      console.log(`add store:${JSON.stringify(obj)}`)
+      if(this.store.length===0){
         this.store.push(obj)
         this.store=[...this.store]
-        console.log(`add store obj:${JSON.stringify(this.store)}`)
-      }else {
-        item.moneyItem=this.arr
-        this.store=[...this.store]
-        console.log(`add store obj:${JSON.stringify(this.store)}`)
+        console.log(`add store length 0:${JSON.stringify(this.store)}`)
+        this.isItemsNeedChange=true
+        return
       }
-    })
-    this.change()
+      this.store.forEach(item=>{
+        if(obj.year!=item.year||obj.mouth!=item.mouth){
+          this.store.push(obj)
+          this.store=[...this.store]
+          console.log(`add store obj:${JSON.stringify(this.store)}`)
+        }else {
+          item.moneyItem=this.arr
+          this.store=[...this.store]
+          console.log(`add store obj:${JSON.stringify(this.store)}`)
+        }
+      })
+      this.isItemsNeedChange=true
+
+    }
+    this.flag=false
     return
   }
 
   @State timeId:number=0
 
   private getStore() {
-    clearInterval(this.timeId)
-    this.timeId=setInterval(()=>{
-      if(this.findStore===true){
-        if(this.store.length===0) {
-          this.arr = [...[]]
-          this.change()
-          return
-        }
-        let f=false
-        this.store.forEach(item => {
-          if ((item.mouth===this.mouth&&item.year===this.year)) {
-            this.arr = [...item.moneyItem]
-            f=true
+    console.log(`find store:${this.findStore}`)
+    if(this.findStore){
+      clearInterval(this.timeId)
+      this.timeId=setInterval(()=>{
+        if(this.findStore===true){
+          if(this.store.length===0) {
+            console.log(`store is 0:${JSON.stringify(this.store)}`)
+            this.arr = [...[]]
+            this.flag=true
+            this.isItemsNeedChange=true
+            return
           }
-        })
-        if(f===false){
-          console.log('false')
-          this.arr=[...[]]
-          this.change()
-          return
+          let f=false
+          this.store.forEach(item => {
+            if ((item.mouth===this.mouth&&item.year===this.year)) {
+              this.arr = [...item.moneyItem]
+              f=true
+            }
+          })
+          if(f===false){
+            console.log('false')
+            this.arr=[...[]]
+            this.isItemsNeedChange=true
+            return
+          }
+          this.flag=true
+          this.isItemsNeedChange=true
+          console.log(`isItem:${this.isItemsNeedChange}`)
+          console.log(`store:${JSON.stringify(this.store===undefined?'none':this.store)}`)
+          console.log(`isItem:${this.isItemsNeedChange}`)
+          console.log('get store')
+          this.findStore=false
         }
-        this.change()
-        this.findStore=false
-        console.log(`store:${JSON.stringify(this.store===undefined?'none':this.store)}`)
-        console.log('get store')
-      }
-    },1000)
-
+      },1000)
+    }
   }
 
   change(){
+    console.log(`need:${this.isItemsNeedChange}`)
+  if(this.isItemsNeedChange){
     this.money=0
     this.outcome=0
     this.income=0
@@ -102,7 +115,9 @@ export default struct home{
     this.arr=[...this.arr]
     this.money=this.income+this.outcome
     console.log(`arr:${JSON.stringify(this.arr)}`)
-    this.flag=false
+    this.isItemsNeedChange=false
+
+  }
   }
 
   build() {
@@ -168,21 +183,8 @@ export default struct home{
 
         }
 
-        Text('+')
-          .borderRadius(60)
-          .width(60)
-          .height(60)
-          .textAlign(TextAlign.Center)
-          .fontSize(30)
-          .fontWeight(FontWeight.Bold)
-          .fontColor(Color.White)
-          .backgroundColor(Color.Black)
-          .position({x:'80%',y:'90%'})
-          .onClick(()=>{
-            router.pushUrl({
-              url:'pages/moneyComputerPage'
-            })
-          })
+        this.extraPlus()
+
       }.height('100%')
       .width('100%')
       .justifyContent(FlexAlign.Start)
@@ -193,6 +195,25 @@ export default struct home{
     .backgroundColor('rgba(0,0,0,0.1)')
 
 
+  }
+
+  @Builder
+  extraPlus() {
+    Text('+')
+      .borderRadius(60)
+      .width(60)
+      .height(60)
+      .textAlign(TextAlign.Center)
+      .fontSize(30)
+      .fontWeight(FontWeight.Bold)
+      .fontColor(Color.White)
+      .backgroundColor(Color.Black)
+      .position({ x: '80%', y: '90%' })
+      .onClick(() => {
+        router.pushUrl({
+          url: 'pages/moneyComputerPage'
+        })
+      })
   }
 
   @Builder

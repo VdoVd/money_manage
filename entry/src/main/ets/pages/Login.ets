@@ -10,7 +10,7 @@ export  interface registerReq{
 @Component
 struct Register {
 
-  @State name:string='tom'
+  @State name:string='Tom'
 
   @State pass:string='123456'
 

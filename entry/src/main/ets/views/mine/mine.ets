@@ -1,6 +1,6 @@
 @Component
 export default struct mine{
-  @State avatar:string=''
+  @State avatar:string='app.media.startIcon'
   build() {
     Column(){
 

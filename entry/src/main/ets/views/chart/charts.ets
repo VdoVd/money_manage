@@ -10,6 +10,7 @@ export default struct ChartComp {
   @StorageLink("arr") arr:moneyItem[]=[]
   @StorageLink("store") store:moneyStore[]=[]
   mouths:string[]=this.getXArr()
+
   getXArr(){
     let arr:string[]=[]
     for(let i=1;i<13;i++){
@@ -17,6 +18,7 @@ export default struct ChartComp {
     }
     return arr
   }
+
   getValueArr(){
     let arr:string[]=[]
     for(let i=1;i<13;i++){
@@ -24,6 +26,7 @@ export default struct ChartComp {
     }
     return arr
   }
+
   getValue(){
     let arr:string[]=this.getValueArr()
     let res:number=0
@@ -37,12 +40,10 @@ export default struct ChartComp {
         }
       })
       let index = this.mouths.indexOf(item.mouth)
-      when(()=>{
-        if(index!=12){
-          let r=this.mouths[index]===this.mouths[index+1]
-          if(r)index++
-        }
-      })
+      // while (index!=12){
+      //   let r=this.mouths[index]===this.mouths[index+1]
+      //   if(r)index++
+      // }
       arr[index]=res.toString()
     })
     console.log(`arr:${JSON.stringify(arr)}`)
