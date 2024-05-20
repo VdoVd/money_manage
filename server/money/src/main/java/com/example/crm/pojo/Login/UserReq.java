@@ -1,14 +1,13 @@
-package com.example.crm.pojo;
+package com.example.crm.pojo.Login;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserReq {
     String username;
     String password;
 }
