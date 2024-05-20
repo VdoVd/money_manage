@@ -55,3 +55,11 @@ export const getNum = () =>{
 export const getRGB=()=>{
   return 'rgb('+getNum()+','+getNum()+','+getNum()+')'
 }
+
+export interface userRes{
+  id:number
+  name:string
+  age:number
+  email:string
+  password:string
+}

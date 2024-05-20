@@ -1,5 +1,6 @@
 import { login, register } from '../common/http/login'
 import { router } from '@kit.ArkUI'
+import { tokenStore, userStoreWithToken } from '../common/store'
 
 export  interface registerReq{
   name:string
@@ -8,11 +9,18 @@ export  interface registerReq{
 
 @Entry
 @Component
-struct Register {
+struct Login {
 
   @State name:string='Tom'
 
   @State pass:string='123456'
+
+  @StorageLink("isLogin") login:boolean=false
+
+  @StorageLink("user") user:userStoreWithToken={} as userStoreWithToken
+
+  async onPageShow(): Promise<void> {
+  }
 
   build() {
     Navigation(){
@@ -31,7 +39,11 @@ struct Register {
 
             const res=await login(this.name,this.pass)
 
-            if(res){
+            if(res!=undefined){
+              this.user=res
+              tokenStore.setToken(this.user.token)
+              console.log(`user:${JSON.stringify(this.user)}`)
+              this.login=true
               router.pushUrl({
                 url:'pages/Index'
               })

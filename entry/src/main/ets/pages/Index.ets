@@ -2,14 +2,17 @@ import { moneyItem, moneyStore } from '../common/data'
 import home from '../views/index/home'
 import mine from '../views/mine/mine'
 import ChartComp from '../views/chart/charts'
+import { userStoreWithToken } from '../common/store'
 
 @Entry
 @Component
 struct Index {
 
   onPageShow(): void {
+    PersistentStorage.persistProp<userStoreWithToken>("user",{} as userStoreWithToken)
     PersistentStorage.persistProp<moneyItem[]>("arr",[])
     PersistentStorage.persistProp<moneyStore[]>("store",[])
+    PersistentStorage.persistProp<boolean>("isLogin",false)
     AppStorage.setOrCreate<number>("year",2024)
     AppStorage.setOrCreate<number>("mouth",5)
     AppStorage.setOrCreate<boolean>("flag",false)
@@ -18,7 +21,7 @@ struct Index {
   }
 
   @State num:number=0
-
+  @StorageLink("isLogin") login:boolean=false
   @Builder
   tarBarBuilder(name:string,index:number){
     Text(name)

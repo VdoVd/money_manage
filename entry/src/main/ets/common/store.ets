@@ -1,24 +1,6 @@
-import { SysUser } from './Model'
-import { preferences } from '@kit.ArkData'
-
-PersistentStorage.persistProp<SysUser>('SysUser',{} as SysUser)
+import { userRes } from './data'
 
 export class allStore{
-
-}
-
-export class userStore{
-
-  private static user:SysUser={} as SysUser
-
-  public static setUser(user:SysUser){
-    console.log(`setUser:${JSON.stringify(user)}`)
-    userStore.user=user
-  }
-
-  public static getUser(){
-    return userStore.user
-  }
 
 }
 
@@ -36,3 +18,19 @@ export class tokenStore{
   }
 
 }
+
+
+export class userStoreWithToken implements userRes{
+
+  id: number=0
+  name: string=''
+  age: number=0
+  email: string=''
+  password: string=''
+  token:string=''
+
+}
+
+
+
+

@@ -14,6 +14,10 @@ struct Register {
 
   @State pass:string='123456'
 
+  async onPageShow(): Promise<void> {
+
+  }
+
   build() {
     Navigation(){
 
