@@ -1,6 +1,8 @@
 {
   "src": [
     "pages/Index",
-    "pages/moneyComputerPage"
+    "pages/moneyComputerPage",
+    "pages/register",
+    "pages/Login"
   ]
 }
