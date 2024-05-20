@@ -15,6 +15,7 @@ export default struct home{
   @Provide @Watch("getStore") findStore:boolean=true
   @State outcome:number=0
   @State income:number=0
+  @State deleteFlag:boolean=false
 
   controller:CustomDialogController=new CustomDialogController({
     builder:timeDialog({year:this.year,mouth:this.mouth})
@@ -69,8 +70,6 @@ export default struct home{
         this.store.forEach(item => {
           if ((item.mouth===this.mouth&&item.year===this.year)) {
             this.arr = [...item.moneyItem]
-            console.log(`year:${item.year}&&mouth:${item.mouth}`)
-            console.log(`year:${this.year}&&mouth:${this.mouth}`)
             f=true
           }
         })
@@ -86,8 +85,6 @@ export default struct home{
         console.log('get store')
       }
     },1000)
-
-
 
   }
 

@@ -1,8 +1,7 @@
 import { moneyItem, moneyStore } from '../common/data'
-import charts from '../views/chart/charts'
 import home from '../views/index/home'
 import mine from '../views/mine/mine'
-
+import ChartComp from '../views/chart/charts'
 
 @Entry
 @Component
@@ -11,21 +10,19 @@ struct Index {
   onPageShow(): void {
     PersistentStorage.persistProp<moneyItem[]>("arr",[])
     PersistentStorage.persistProp<moneyStore[]>("store",[])
+    AppStorage.setOrCreate<number>("year",2024)
+    AppStorage.setOrCreate<number>("mouth",5)
     AppStorage.setOrCreate<boolean>("flag",false)
     let context=getContext()
     let path=context.tempDir
-    console.log('tmp'+path)
-    console.log('files'+context.filesDir)
-    console.log('cache'+context.cacheDir)
   }
 
   @State num:number=0
+
   @Builder
   tarBarBuilder(name:string,index:number){
-
     Text(name)
       .fontColor(this.num===index?Color.Black:Color.Gray)
-
   }
 
   build() {
@@ -37,7 +34,7 @@ struct Index {
       }.tabBar(this.tarBarBuilder('账单',0))
 
       TabContent(){
-        charts()
+        ChartComp()
       }.tabBar(this.tarBarBuilder('图表',1))
 
       TabContent(){
