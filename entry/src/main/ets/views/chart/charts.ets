@@ -40,6 +40,7 @@ export default struct ChartComp {
       when(()=>{
         if(index!=12){
           let r=this.mouths[index]===this.mouths[index+1]
+          if(r)index++
         }
       })
       arr[index]=res.toString()
